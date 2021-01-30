@@ -19,16 +19,16 @@ let counter = 0;
 // クイズの各要素を定義
 
 
-// クイズを出題
-const createQuiz = (quizObj) => {
-  const quizTitle = '問題';
-  console.log(quizTitle);
-  const quizGenre = '';
-  const quizDif = '';
-  const question = '';
-  const answers = ['', '', '', '']
-  const correct = '';
-}
+// クイズの内容をAPIからセットするクラス
+class CreateQuiz {
+  constructor(quizObj, i) {
+    this.quizGenre = quizObj.results[i].category;
+    this.quizDif = quizObj.results[i].difficulty;
+    this.question = quizObj.results[i].question;
+    // this.answers = 正解肢を不正解肢配列にpush
+    this.correct = quizObj.results[i].correct_answer;
+  };
+};
 
 // APIを取得する
 const getAPI =() => {
@@ -38,11 +38,10 @@ const getAPI =() => {
     })
     .then(quizObj => {
       console.log(quizObj);
-      createQuiz(quizObj);
+      const quiz = new CreateQuiz(quizObj, 0);
+      console.log(quiz);
     })
     .catch(() => {
       console.log('APIの取得失敗!!!')
     });
 };
-
-getAPI();
