@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
-  <div id="home">
+  <div id="home-container">
     <h1 id="main">ようこそ</h1>
     <hr>
     <p id="para">以下のボタンをクリック</p>
@@ -15,18 +15,17 @@
     <button id="btn">開始</button>
   </div>
 
-  <div id="question" class="transparent">
-    <h1 id="quiz-title"></h1>
-    <h2 id="quiz-genre"></h2>
-    <h2 id="quiz-dif"></h2>
+  <div id="question-container" class="transparent">
+    <h1 id="quiz-title">問題</h1>
+    <h2 id="quiz-genre">ジャンル</h2>
+    <h2 id="quiz-dif">難易度</h2>
     <hr>
-    <p id="question"></p>
+    <p id="question">問題文</p>
     <hr>
-    <button id="answer1">
-    </button>
-    <button id="answer1"></button>
-    <button id="answer1"></button>
-    <button id="answer1"></button>
+    <button id="answer0" class="btn"></button>
+    <button id="answer1" class="btn"></button>
+    <button id="answer2" class="btn"></button>
+    <button id="answer3" class="btn"></button>
   </div>
   <script src="main.js"></script>
 </body>

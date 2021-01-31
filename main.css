@@ -1,4 +1,15 @@
 .transparent {
   display: none;
 }
+
+.btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.btn:last-child {
+  margin-bottom: 0px;
+}
 /*# sourceMappingURL=main.css.map */
