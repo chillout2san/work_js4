@@ -32,7 +32,6 @@ let quizCounter = 0;
 
 // クイズを出題するクラス
 class CreateQuiz {
-  // APIから内容を取ってくる
   constructor(quizObj, i) {
     this.index = i + 1;
     this.quizGenre = quizObj.results[i].category;
@@ -42,7 +41,6 @@ class CreateQuiz {
     this.answers = quizObj.results[i].incorrect_answers;
     this.correct = quizObj.results[i].correct_answer;
   };
-  // 選択肢の配列をシャッフル
   shuffleAns() {
     for(let i = this.answers.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -51,7 +49,6 @@ class CreateQuiz {
       this.answers[j] = tmp;
     };
   };
-  // HTMLにデータをセット
   setQuiz() {
     $quizTitle.innerHTML = `問題${this.index}`;
     $quizGenre.innerHTML = `[ジャンル]${this.quizGenre}`;
@@ -67,20 +64,16 @@ class CreateQuiz {
 };
 
 // APIを取得する
-const getAPI =() => {
+const getAPI = () => {
   fetch('https://opentdb.com/api.php?amount=10')
     .then(response => {
       return response.json()
     })
     .then(quizObj => {
-      while(quizCounter < quizObj.results.length){
-        let quiz = new CreateQuiz(quizObj, quizCounter);
-        quiz.shuffleAns();
-        quiz.setQuiz();
-        quizCounter++;
-        console.log(quiz);
-        
-      };
+      let quiz = new CreateQuiz(quizObj, quizCounter);
+      quiz.shuffleAns();
+      quiz.setQuiz();
+      quizCounter++;
     })
     .catch(() => {
       console.log('残念！！！');
