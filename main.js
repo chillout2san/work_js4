@@ -16,66 +16,75 @@ const $quizAnswer2 = document.querySelector('#answer2');
 const $quizAnswer3 = document.querySelector('#answer3');
 const $quizAnswerBtn = document.querySelectorAll('#question-container > button');
 
-// ボタンを押下すると実行する非同期処理
-$btn.addEventListener('click', () => {
-  $main.innerText = '取得中';
-  $para.innerText = '少々お待ちください';
-  $btn.classList.add('transparent');
-  getAPI();
-});
-
 // 正解数用のカウンター
 let correctCounter = 0;
 
 // 何問目か用のカウンター
 let quizCounter = 0;
 
+// 開始ボタンを押下すると実行する非同期処理
+$btn.addEventListener('click', () => {
+  $main.innerText = '取得中';
+  $para.innerText = '少々お待ちください';
+  $btn.classList.add('transparent');
+  getQuizData();
+});
+
+// 選択肢ボタンを押すと次のクイズが出題される
+for(let i = 0; i < 4; i++){
+  $quizAnswerBtn[i].addEventListener('click', () => {
+    console.log('テスト');
+  });
+};
+
 // クイズを出題するクラス
-class CreateQuiz {
-  constructor(quizObj, i) {
+class Quiz {
+  constructor(obj, i) {
     this.index = i + 1;
-    this.quizGenre = quizObj.results[i].category;
-    this.quizDif = quizObj.results[i].difficulty;
-    this.question = quizObj.results[i].question;
-    quizObj.results[i].incorrect_answers.push(quizObj.results[i].correct_answer);
-    this.answers = quizObj.results[i].incorrect_answers;
-    this.correct = quizObj.results[i].correct_answer;
-  };
-  shuffleAns() {
-    for(let i = this.answers.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const tmp = this.answers[i];
-      this.answers[i] = this.answers[j];
-      this.answers[j] = tmp;
-    };
-  };
-  setQuiz() {
-    $quizTitle.innerHTML = `問題${this.index}`;
-    $quizGenre.innerHTML = `[ジャンル]${this.quizGenre}`;
-    $quizDif.innerHTML = `[難易度]${this.quizDif}`;
-    $quizQuestion.innerHTML = this.question;
-    $quizAnswer0.innerHTML = this.answers[0];
-    $quizAnswer1.innerHTML = this.answers[1];
-    $quizAnswer2.innerHTML = this.answers[2];
-    $quizAnswer3.innerHTML = this.answers[3];
-    $homeContainer.classList.add('transparent');
-    $questionContainer.classList.remove('transparent');
+    this.quizGenre = obj.category;
+    this.quizDif = obj.difficulty;
+    this.question = obj.question;
+    obj.incorrect_answers.push(obj.correct_answer);
+    this.answers = obj.incorrect_answers;
+    this.correct = obj.correct_answer;
+    quizCounter++;
   };
 };
 
+// 選択肢をシャッフルする関数
+const shuffleAns = (answers) => {
+  for(let i = answers.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = answers[i];
+    answers[i] = answers[j];
+    answers[j] = tmp;
+  };
+};
+
+// クイズを表示する関数
+const setQuiz = (obj) => {
+  $quizTitle.innerHTML = `問題${obj.index}`;
+  $quizGenre.innerHTML = `[ジャンル]${obj.quizGenre}`;
+  $quizDif.innerHTML = `[難易度]${obj.quizDif}`;
+  $quizQuestion.innerHTML = obj.question;
+  $quizAnswer0.innerHTML = obj.answers[0];
+  $quizAnswer1.innerHTML = obj.answers[1];
+  $quizAnswer2.innerHTML = obj.answers[2];
+  $quizAnswer3.innerHTML = obj.answers[3];
+  $homeContainer.classList.add('transparent');
+  $questionContainer.classList.remove('transparent');
+};
+
 // APIを取得する
-const getAPI = () => {
-  fetch('https://opentdb.com/api.php?amount=10')
-    .then(response => {
-      return response.json()
-    })
-    .then(quizObj => {
-      let quiz = new CreateQuiz(quizObj, quizCounter);
-      quiz.shuffleAns();
-      quiz.setQuiz();
-      quizCounter++;
-    })
-    .catch(() => {
-      console.log('残念！！！');
-    });
+const getQuizData = async () => {
+  try{
+    const response = await fetch('https://opentdb.com/api.php?amount=10');
+    const quizMass = await response.json();
+    const quizObj = await quizMass.results;
+    const quiz = new Quiz(quizObj[0], 0);
+    shuffleAns(quiz);
+    setQuiz(quiz);
+  }catch(e) {
+      console.log('e');
+    };
 };
