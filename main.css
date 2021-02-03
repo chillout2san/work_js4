@@ -1,7 +1,3 @@
-.transparent {
-  display: none;
-}
-
 .btn {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11,5 +7,9 @@
 
 .btn:last-child {
   margin-bottom: 0px;
+}
+
+.transparent {
+  display: none;
 }
 /*# sourceMappingURL=main.css.map */
