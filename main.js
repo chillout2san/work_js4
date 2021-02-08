@@ -25,49 +25,40 @@ const resultTitle = document.getElementById('result-title');
 const resultPara = document.getElementById('result-para');
 const resultBtn = document.getElementById('result-btn');
 
+// 正解数用のカウンター
+let correctCounter = 0;
+
+// 何問目か用のカウンター
+let quizCounter = 0;
+
+// クイズ要素
+let quizObj = [];
+
 // 開始ボタンを押下すると実行する非同期処理
 btn.addEventListener('click', () => {
   main.innerText = '取得中';
   para.innerText = '少々お待ちください';
   btn.classList.add('transparent');
   getQuizData();
-  setQuiz();
-  // getuQuizDataで取得したデータをどうやってこちらに持ってくる？？
 });
 
 // クイズを出題するクラス
 class Quiz {
-  constructor(obj) {
-    this.quizObj = obj;
-    this.correctCounter = 0;
+  constructor(obj, i) {
+    this.index = i + 1;
+    this.quizGenre = obj.category;
+    this.quizDif = obj.difficulty;
+    this.question = obj.question;
+    obj.incorrect_answers.push(obj.correct_answer);
+    this.answers = obj.incorrect_answers;
   };
-  displayQuizNumber(i){
-    return i;
-  }
-  displayQuestion(i){
-    const question = this.quizObj[i].question;
-    return question;
-  };
-  displayDifficulty(i){
-    const difficulty = this.quizObj[i].difficulty;
-    return difficulty;
-  };
-  displayChoices(i){
-    const choices = this.quizObj[i].incorrect_answers.concat('correct_answer');
-    for(let i = choices.length - 1; i > 0; i--) {
+  shuffleAns(){
+    for(let i = this.answers.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      const tmp = choices[i];
-      choices[i] = choices[j];
-      choices[j] = tmp;
+      const tmp = this.answers[i];
+      this.answers[i] = this.answers[j];
+      this.answers[j] = tmp;
     };
-    return choices;
-  };
-  displayCorrectAnswer(i){
-    const correctAnswer = this.quizObj[i].correct_answer;
-    return correctAnswer;
-  }
-  displayCorrectCounter(){
-    return correctCounter;
   }
 };
 
@@ -98,8 +89,10 @@ const getQuizData = async () => {
   try{
     const response = await fetch('https://opentdb.com/api.php?amount=10');
     const quizMass = await response.json();
-    const quiz = new Quiz(quizMass.results);
-    return quiz;
+    quizObj = quizMass.results;
+    const quiz = new Quiz(quizObj[0], 0);
+    quiz.shuffleAns();
+    setQuiz(quiz);
   }catch(error) {
       console.log('error');
     };
