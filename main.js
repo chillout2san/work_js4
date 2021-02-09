@@ -35,11 +35,11 @@ let quizCounter = 0;
 let quizObj = [];
 
 // 開始ボタンを押下すると実行する非同期処理
-btn.addEventListener('click', () => {
+btn.addEventListener('click', async () => {
   main.innerText = '取得中';
   para.innerText = '少々お待ちください';
   btn.classList.add('transparent');
-  getQuizData();
+  await getQuizData();
 });
 
 // クイズを出題するクラス
@@ -91,9 +91,9 @@ const getQuizData = async () => {
     const quizMass = await response.json();
     quizObj = quizMass.results;
     const quiz = new Quiz(quizObj[0], 0);
-    quiz.shuffleAns();
+    await quiz.shuffleAns();
     setQuiz(quiz);
-  }catch(error) {
+    }catch(error) {
       console.log('error');
     };
 };
